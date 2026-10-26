@@ -2,6 +2,7 @@ import './globals.css';
 import './landing.css';
 import React from 'react';
 import type { Metadata } from 'next';
+import { SHOW_REALTOR, SHOW_INVESTMENT } from './lib/productFlags';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://lodgely.ng'),
@@ -20,8 +21,8 @@ export const metadata: Metadata = {
     'tenant app',
     'Nigeria property management',
     'real estate developer software',
-    'realtor CRM',
-    'real estate investment platform',
+    ...(SHOW_REALTOR ? ['realtor CRM'] : []),
+    ...(SHOW_INVESTMENT ? ['real estate investment platform'] : []),
   ],
   authors: [{ name: 'Lodgely Inc.', url: 'https://lodgely.ng' }],
   creator: 'Lodgely',

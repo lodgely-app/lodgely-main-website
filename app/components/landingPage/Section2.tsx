@@ -3,6 +3,7 @@
 import React from 'react';
 import { Users, TrendingUp, Smartphone, ShieldCheck } from 'lucide-react';
 import { getSignUpUrl } from '../../lib/auth';
+import { SHOW_OWNER, VISIBLE_PRODUCT_IDS, VISIBLE_PRODUCT_NAMES, VISIBLE_PRODUCT_ROLES, joinWithAnd } from '../../lib/productFlags';
 
 const miniFeatures = [
   {
@@ -10,7 +11,7 @@ const miniFeatures = [
     iconBg: '#EDE9FF',
     iconColor: '#4F39F6',
     title: 'BUILT FOR EVERY ROLE:',
-    desc: 'Developers, facility managers, realtors, investors, residents, and owners each get a tailored experience.',
+    desc: `${joinWithAnd(VISIBLE_PRODUCT_ROLES.map((r) => r.charAt(0).toUpperCase() + r.slice(1)))} each get a tailored experience.`,
   },
   {
     Icon: TrendingUp,
@@ -24,7 +25,9 @@ const miniFeatures = [
     iconBg: '#FDEEE4',
     iconColor: '#B45309',
     title: 'ACCESS FROM ANYWHERE:',
-    desc: "Web for operators, native mobile apps for residents and owners.",
+    desc: SHOW_OWNER
+      ? 'Web for operators, native mobile apps for residents and owners.'
+      : 'Web for operators, a native mobile app for residents.',
   },
   {
     Icon: ShieldCheck,
@@ -49,10 +52,9 @@ export const Section2 = () => {
         {/* Column 1 */}
         <div className="caps-col">
           <div className="caps-card" style={{ background: '#EDE9FF', minHeight: 420 }}>
-            <h3 className="caps-card-title">ONE IDENTITY, SIX APPS</h3>
+            <h3 className="caps-card-title">ONE IDENTITY, {VISIBLE_PRODUCT_IDS.length} APPS</h3>
             <p className="caps-card-desc">
-              Sign in once and move between Developer, Facility, Realtor, Investment, and more — no separate accounts
-              to manage.
+              Sign in once and move between {joinWithAnd(VISIBLE_PRODUCT_NAMES)} — no separate accounts to manage.
             </p>
             <a href={getSignUpUrl('marketing')} className="caps-card-btn" style={{ background: '#4F39F6' }}>
               Get Started

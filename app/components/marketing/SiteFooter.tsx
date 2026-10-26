@@ -1,13 +1,14 @@
 import React from 'react';
+import { isProductVisible } from '../../lib/productFlags';
 
-const PRODUCT_LINKS: { label: string; href: string }[] = [
-  { label: 'Developer', href: '/developer' },
-  { label: 'Facility', href: '/facility' },
-  { label: 'Realtor', href: '/realtor' },
-  { label: 'Investment', href: '/investment' },
-  { label: 'Resident', href: '/resident' },
-  { label: 'Owner', href: '/owner' },
-];
+const PRODUCT_LINKS: { id: string; label: string; href: string }[] = [
+  { id: 'developer', label: 'Developer', href: '/developer' },
+  { id: 'facility', label: 'Facility', href: '/facility' },
+  { id: 'realtor', label: 'Realtor', href: '/realtor' },
+  { id: 'investment', label: 'Investment', href: '/investment' },
+  { id: 'resident', label: 'Resident', href: '/resident' },
+  { id: 'owner', label: 'Owner', href: '/owner' },
+].filter((l) => isProductVisible(l.id));
 
 // Shared site-wide footer. Migrated product pages (developer/facility/realtor)
 // bring their own richer footer section as part of their ported content —
@@ -39,6 +40,10 @@ export function SiteFooter() {
 
       <div className="site-footer-bottom">
         <p>© {new Date().getFullYear()} Lodgely Inc. All rights reserved. Unified Real Estate Property Suite.</p>
+        <div className="site-footer-legal-links">
+          <a href="/terms">Terms &amp; Conditions</a>
+          <a href="/privacy">Privacy Policy</a>
+        </div>
       </div>
     </footer>
   );

@@ -16,6 +16,8 @@ import {
   User,
 } from 'lucide-react';
 import { getSignInUrl, getAccountAppUrl } from '../../lib/auth';
+import { isProductVisible } from '../../lib/productFlags';
+import { withCsrfHeader } from '../../lib/csrf';
 
 const ProductsList = [
   {
@@ -73,6 +75,11 @@ const ProductsList = [
     color: '#2563EB',
   },
 ];
+
+// Realtor/Investment/Owner are feature-flagged off while their apps aren't
+// ready yet (see app/lib/productFlags.ts) — filtered here once so both the
+// desktop dropdown and the mobile drawer below stay in sync automatically.
+const VisibleProductsList = ProductsList.filter((p) => isProductVisible(p.id));
 
 interface AppInfo {
   id: string;
@@ -242,7 +249,15 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
 
   const handleLogout = () => {
     const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:4000';
-    fetch(`${gatewayUrl}/auth/logout`, { method: 'POST', credentials: 'include' })
+    // api-gateway's CSRF middleware 403s any cookie-based state-changing
+    // request (including this one) that's missing the x-csrf-token header —
+    // without it, the session is never actually destroyed server-side, so
+    // reloading just logs you straight back in via the still-valid cookie.
+    fetch(`${gatewayUrl}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: withCsrfHeader('POST'),
+    })
       .finally(() => {
         setUser(null);
         setUserMenuOpen(false);
@@ -355,7 +370,7 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                     className="nav-dropdown-menu"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {ProductsList.map((item) => (
+                    {VisibleProductsList.map((item) => (
                       <Link
                         key={item.id}
                         href={item.link}
@@ -541,7 +556,7 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                     Products
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '4px' }}>
-                    {ProductsList.map((p) => (
+                    {VisibleProductsList.map((p) => (
                       <Link
                         key={p.id}
                         href={p.link}

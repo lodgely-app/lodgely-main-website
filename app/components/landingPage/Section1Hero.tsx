@@ -17,6 +17,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import Link from 'next/link';
+import { isProductVisible, SHOW_OWNER } from '../../lib/productFlags';
 
 interface HeroSlide {
   id: string;
@@ -27,9 +28,12 @@ interface HeroSlide {
   image: string;
   primaryCta: string;
   primaryHref: string;
+  // Gates this entire slide behind a product flag (see productFlags.ts) —
+  // omitted for slides that aren't tied to a single not-yet-ready product.
+  productId?: string;
 }
 
-const HERO_SLIDES: HeroSlide[] = [
+const ALL_HERO_SLIDES: HeroSlide[] = [
   {
     id: 'slide-1',
     num: '01',
@@ -62,19 +66,27 @@ const HERO_SLIDES: HeroSlide[] = [
     image: '/hero/slide-3.jpg',
     primaryCta: 'Explore Investment Hub',
     primaryHref: '/investment',
+    productId: 'investment',
   },
   {
     id: 'slide-4',
     num: '04',
     tag: 'NATIVE MOBILE APPS',
     title: 'Handled From Your Phone: Tenants & Landlords',
-    description:
-      'Digital gate passes and 1-tap rent payments for residents, paired with live revenue disbursements and 24/7 unit occupancy tracking for property owners.',
+    description: SHOW_OWNER
+      ? 'Digital gate passes and 1-tap rent payments for residents, paired with live revenue disbursements and 24/7 unit occupancy tracking for property owners.'
+      : 'Digital gate passes, 1-tap rent payments, maintenance tickets, and building notices — all from the Lodgely Resident mobile app.',
     image: '/hero/slide-4.jpg',
     primaryCta: 'Explore Mobile Apps',
     primaryHref: '#mobile-apps',
   },
 ];
+
+// Re-numbered after filtering so "01, 02, 03..." stays sequential with no
+// gap when a flagged-off slide (e.g. Investment) is removed.
+const HERO_SLIDES: HeroSlide[] = ALL_HERO_SLIDES.filter(
+  (s) => !s.productId || isProductVisible(s.productId),
+).map((s, i) => ({ ...s, num: String(i + 1).padStart(2, '0') }));
 
 interface LodgelyAppCard {
   id: string;
@@ -155,7 +167,7 @@ const LODGELY_APPS: LodgelyAppCard[] = [
     icon: Landmark,
     tag: 'Mobile App',
   },
-];
+].filter((app) => isProductVisible(app.id));
 
 export const Section1Hero: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState(0);

@@ -1,6 +1,8 @@
 import React from 'react';
+import { notFound } from 'next/navigation';
 import { Wallet, Building2, FileText, Wrench } from 'lucide-react';
 import { AppStoreTemplate } from '../components/marketing/AppStoreTemplate';
+import { SHOW_OWNER } from '../lib/productFlags';
 
 export const metadata = {
   title: 'Lodgely Owner App — Rent Collection, Wallet & Lease Management',
@@ -12,6 +14,14 @@ export const metadata = {
 // scope) — this page is a pure app-store download page, with no Sign In/Sign
 // Up CTA and no link to the legacy landlord-web browser app.
 export default function OwnerPage() {
+  // Not publicly ready yet — hidden from nav/cards/footer/search (see
+  // app/lib/productFlags.ts) and 404'd here too, so visiting the URL
+  // directly doesn't surface it either. Nothing above is deleted; flip
+  // NEXT_PUBLIC_SHOW_OWNER to 'true' once it's ready.
+  if (!SHOW_OWNER) {
+    notFound();
+  }
+
   const appStoreUrl = process.env.NEXT_PUBLIC_OWNER_APP_STORE_URL || '#';
   const playStoreUrl = process.env.NEXT_PUBLIC_OWNER_PLAY_STORE_URL || '#';
 

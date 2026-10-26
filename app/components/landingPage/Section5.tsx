@@ -3,11 +3,16 @@
 import React from 'react';
 import ProductSectionCmp from './ProductSectionCmp';
 import { ResidentCard, OwnerCard } from './Cards';
+import { SHOW_OWNER } from '../../lib/productFlags';
 
-const tabOptions = [
-  { id: '1', title: 'Resident' },
-  { id: '2', title: 'Owner' },
+// Owner is feature-flagged off while its app isn't ready — same
+// index-alignment reasoning as Section3.
+const slots: { title: string; card: React.ReactNode }[] = [
+  { title: 'Resident', card: <ResidentCard /> },
+  ...(SHOW_OWNER ? [{ title: 'Owner', card: <OwnerCard /> }] : []),
 ];
+
+const tabOptions = slots.map((s, i) => ({ id: String(i + 1), title: s.title }));
 
 export const Section5 = () => {
   return (
@@ -28,8 +33,8 @@ export const Section5 = () => {
         </h2>
       }
       tabOptions={tabOptions}
-      card1={<ResidentCard />}
-      card2={<OwnerCard />}
+      card1={slots[0]?.card}
+      card2={slots[1]?.card}
       bg="#16191C"
       textColor="light"
     />

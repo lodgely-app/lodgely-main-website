@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, ArrowRight, KeyRound, Landmark, Building2, HardHat, Home, TrendingUp, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { isProductVisible } from '../../lib/productFlags';
 
 interface HeroSearchModalProps {
   isOpen: boolean;
@@ -71,7 +72,7 @@ const APPS_DIRECTORY = [
     color: '#6366F1',
     keywords: ['investment', 'deals', 'yield', 'roi', 'portfolio', 'dividends', 'syndication', 'fund'],
   },
-];
+].filter((app) => isProductVisible(app.id));
 
 export const HeroSearchModal: React.FC<HeroSearchModalProps> = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');

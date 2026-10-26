@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
+import { notFound } from 'next/navigation';
 import { ComingSoonTemplate } from '../components/marketing/ComingSoonTemplate';
+import { SHOW_INVESTMENT } from '../lib/productFlags';
 
 const icon = (path: React.ReactNode) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} width={22} height={22}>
@@ -16,6 +18,14 @@ const icon = (path: React.ReactNode) => (
 // investment-web's actual purpose (a public feed of listings/channels plus a
 // personal portfolio behind login) and the homepage's own investment blurb.
 export default function InvestmentMarketingPage() {
+  // Not publicly ready yet — hidden from nav/cards/footer/search (see
+  // app/lib/productFlags.ts) and 404'd here too, so visiting the URL
+  // directly doesn't surface it either. Nothing above is deleted; flip
+  // NEXT_PUBLIC_SHOW_INVESTMENT to 'true' once it's ready.
+  if (!SHOW_INVESTMENT) {
+    notFound();
+  }
+
   return (
     <ComingSoonTemplate
       appId="investment"

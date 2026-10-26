@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Mail } from 'lucide-react';
+import { isProductVisible } from '../../lib/productFlags';
 
 // lucide-react doesn't ship brand/social-platform icons (intentionally, to
 // avoid trademarking issues) — these are small hand-drawn glyphs, not
@@ -39,16 +40,16 @@ const quickLinks = [
 ];
 
 const operatorApps = [
-  { label: 'Developer', href: '/developer' },
-  { label: 'Facility', href: '/facility' },
-  { label: 'Realtor', href: '/realtor' },
-  { label: 'Investment', href: '/investment' },
-];
+  { id: 'developer', label: 'Developer', href: '/developer' },
+  { id: 'facility', label: 'Facility', href: '/facility' },
+  { id: 'realtor', label: 'Realtor', href: '/realtor' },
+  { id: 'investment', label: 'Investment', href: '/investment' },
+].filter((l) => isProductVisible(l.id));
 
 const stakeholderApps = [
-  { label: 'Resident', href: '/resident' },
-  { label: 'Owner', href: '/owner' },
-];
+  { id: 'resident', label: 'Resident', href: '/resident' },
+  { id: 'owner', label: 'Owner', href: '/owner' },
+].filter((l) => isProductVisible(l.id));
 
 export const FooterCmp = () => {
   const currentYear = new Date().getFullYear();
