@@ -1,6 +1,6 @@
 import React from 'react';
 import { SiteHeader } from './SiteHeader';
-import { SiteFooter } from './SiteFooter';
+import FooterCmp from '../landingPage/FooterCmp';
 import { LegalSidebar, LegalSidebarSection } from './LegalSidebar';
 
 export interface LegalLayoutProps {
@@ -12,7 +12,7 @@ export interface LegalLayoutProps {
 }
 
 // Shared layout for /privacy and /terms — long-form legal content, styled
-// consistently with the rest of the marketing site (SiteHeader/SiteFooter,
+// consistently with the rest of the marketing site (SiteHeader/FooterCmp,
 // navy/mint palette). "On this page" is a sticky left sidebar (see
 // LegalSidebar) rather than an inline box, matching the reference layout.
 export function LegalLayout({ title, lastUpdated, intro, sections, children }: LegalLayoutProps) {
@@ -30,7 +30,7 @@ export function LegalLayout({ title, lastUpdated, intro, sections, children }: L
           <div className="legal-content">{children}</div>
         </div>
       </div>
-      <SiteFooter />
+      <FooterCmp />
     </main>
   );
 }

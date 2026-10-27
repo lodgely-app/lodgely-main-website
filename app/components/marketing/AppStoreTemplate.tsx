@@ -1,7 +1,7 @@
 import React from 'react';
 import { Apple, Play } from 'lucide-react';
 import { SiteHeader } from './SiteHeader';
-import { SiteFooter } from './SiteFooter';
+import FooterCmp from '../landingPage/FooterCmp';
 
 export interface AppStoreFeature {
   icon: React.ReactNode;
@@ -217,7 +217,7 @@ export function AppStoreTemplate({
         </div>
       </section>
 
-      <SiteFooter />
+      <FooterCmp />
     </main>
   );
 }

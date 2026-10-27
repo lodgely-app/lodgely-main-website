@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Mail } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 import { isProductVisible } from '../../lib/productFlags';
 
 // lucide-react doesn't ship brand/social-platform icons (intentionally, to
@@ -67,10 +67,14 @@ export const FooterCmp = () => {
 
             <div className="footer-contact-block">
               <h5 className="footer-col-title-v2">Contact Info</h5>
-              <a href="mailto:hello@lodgely.ng" className="footer-contact-row">
+              <a href="mailto:support@lodgely.ng" className="footer-contact-row">
                 <Mail size={16} />
-                <span>hello@lodgely.ng</span>
+                <span>support@lodgely.ng</span>
               </a>
+              <div className="footer-contact-row footer-address-row">
+                <MapPin size={16} />
+                <span>Plot 246 Cadastral Zone B10, Jabi-Dakibiu, Abuja, Nigeria</span>
+              </div>
             </div>
           </div>
 

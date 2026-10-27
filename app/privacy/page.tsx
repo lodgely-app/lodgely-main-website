@@ -388,7 +388,7 @@ export default function PrivacyPolicyPage() {
         <p>
           No method of transmission or storage is 100% secure, and we cannot guarantee absolute security. If you
           believe you&apos;ve found a security vulnerability in our Services, please report it responsibly to{' '}
-          <a href="mailto:hello@lodgely.ng">hello@lodgely.ng</a> before disclosing it publicly, so we can
+          <a href="mailto:support@lodgely.ng">support@lodgely.ng</a> before disclosing it publicly, so we can
           investigate and address it.
         </p>
       </section>
@@ -455,7 +455,7 @@ export default function PrivacyPolicyPage() {
           <br />
           Email: <a href="mailto:support@lodgely.ng">support@lodgely.ng</a>
           <br />
-          {/* [Registered business address — to be added] */}
+          Plot 246 Cadastral Zone B10, Jabi-Dakibiu, Abuja, Nigeria
         </p>
         {/* <p>
           If you are not satisfied with our response, you may lodge a complaint with the{' '}

@@ -2,7 +2,7 @@
 
 import React, { ReactNode } from 'react';
 import { SiteHeader } from './SiteHeader';
-import { SiteFooter } from './SiteFooter';
+import FooterCmp from '../landingPage/FooterCmp';
 import { getSignInUrl, getSignUpUrl } from '../../lib/auth';
 
 export interface ComingSoonFeature {
@@ -208,7 +208,7 @@ export function ComingSoonTemplate({
         </div>
       </section>
 
-      <SiteFooter />
+      <FooterCmp />
     </main>
   );
 }

@@ -14,6 +14,10 @@ import {
   LogOut,
   LayoutDashboard,
   User,
+  Briefcase,
+  ClipboardList,
+  Workflow,
+  GraduationCap,
 } from 'lucide-react';
 import { getSignInUrl, getAccountAppUrl } from '../../lib/auth';
 import { isProductVisible } from '../../lib/productFlags';
@@ -80,6 +84,44 @@ const ProductsList = [
 // ready yet (see app/lib/productFlags.ts) — filtered here once so both the
 // desktop dropdown and the mobile drawer below stay in sync automatically.
 const VisibleProductsList = ProductsList.filter((p) => isProductVisible(p.id));
+
+// Professional services Lodgely offers alongside the software — not
+// products with their own login, so these don't go through productFlags.ts
+// or APPS_CONFIG at all, just a plain nav dropdown pointing at /services/*.
+const ServicesList = [
+  {
+    id: 'business-advisory',
+    title: 'Business Advisory',
+    description: 'Strategic advisory for developers, operators, and agencies.',
+    Icon: Briefcase,
+    link: '/services/business-advisory',
+    color: '#0D9488',
+  },
+  {
+    id: 'project-management',
+    title: 'Project Management',
+    description: 'Hands-on PM for construction and development projects.',
+    Icon: ClipboardList,
+    link: '/services/project-management',
+    color: '#00BBA8',
+  },
+  {
+    id: 'change-management',
+    title: 'Change Management',
+    description: 'Rollout planning and adoption support for your team.',
+    Icon: Workflow,
+    link: '/services/change-management',
+    color: '#9333EA',
+  },
+  {
+    id: 'facility-management-training',
+    title: 'Facility Management Training',
+    description: 'Training for facility managers and building staff.',
+    Icon: GraduationCap,
+    link: '/services/facility-management-training',
+    color: '#2563EB',
+  },
+];
 
 interface AppInfo {
   id: string;
@@ -178,10 +220,12 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [openMobile, setOpenMobile] = useState(false);
   const [productMenu, setProductMenu] = useState(false);
+  const [servicesMenu, setServicesMenu] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [user, setUser] = useState<UserSession | null>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const productMenuRef = useRef<HTMLDivElement>(null);
+  const servicesMenuRef = useRef<HTMLDivElement>(null);
 
   // Determine current app ID based on prop or pathname
   const currentAppId = activeAppId || (() => {
@@ -232,6 +276,9 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
       if (productMenuRef.current && !productMenuRef.current.contains(target)) {
         setProductMenu(false);
       }
+      if (servicesMenuRef.current && !servicesMenuRef.current.contains(target)) {
+        setServicesMenu(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('click', handleClickOutside);
@@ -244,6 +291,14 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
   const handleProductClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setProductMenu((prev) => !prev);
+    setServicesMenu(false);
+    setUserMenuOpen(false);
+  };
+
+  const handleServicesClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setServicesMenu((prev) => !prev);
+    setProductMenu(false);
     setUserMenuOpen(false);
   };
 
@@ -267,6 +322,7 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
 
   const closeDropdowns = () => {
     setProductMenu(false);
+    setServicesMenu(false);
     setUserMenuOpen(false);
   };
 
@@ -403,6 +459,83 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                         </div>
                       </Link>
                     ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Services Dropdown */}
+            <div style={{ position: 'relative' }} ref={servicesMenuRef}>
+              <button
+                type="button"
+                onClick={handleServicesClick}
+                className="nav-item-btn"
+              >
+                <span>Services</span>
+                <motion.svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#0F172A"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  animate={{ rotate: servicesMenu ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  style={{ marginTop: 1 }}
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </motion.svg>
+              </button>
+
+              <AnimatePresence>
+                {servicesMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.96 }}
+                    transition={{ duration: 0.18 }}
+                    className="nav-dropdown-menu"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {ServicesList.map((item) => {
+                      const isActive = pathname?.startsWith(item.link);
+                      return (
+                        <Link
+                          key={item.id}
+                          href={item.link}
+                          onClick={() => setServicesMenu(false)}
+                          className={`nav-dropdown-item ${isActive ? 'active' : ''}`}
+                        >
+                          <div
+                            style={{
+                              width: 38,
+                              height: 38,
+                              borderRadius: 10,
+                              background: `${item.color}1A`,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0,
+                            }}
+                          >
+                            <item.Icon size={18} color={item.color} />
+                          </div>
+                          <div>
+                            <div
+                              className="nav-dropdown-title"
+                              style={{ color: isActive ? item.color : '#0F172A' }}
+                            >
+                              {item.title}
+                            </div>
+                            <div className="nav-dropdown-desc">
+                              {item.description}
+                            </div>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -580,6 +713,50 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                         <span>{p.title}</span>
                       </Link>
                     ))}
+                  </div>
+                </div>
+
+                <div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '12px' }}>
+                    Services
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '4px' }}>
+                    {ServicesList.map((s) => {
+                      const isActive = pathname?.startsWith(s.link);
+                      return (
+                        <Link
+                          key={s.id}
+                          href={s.link}
+                          onClick={() => setOpenMobile(false)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            padding: '8px 0',
+                            textDecoration: 'none',
+                            color: isActive ? s.color : '#334155',
+                            fontSize: '16px',
+                            fontWeight: isActive ? 700 : 500,
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: 28,
+                              height: 28,
+                              borderRadius: 6,
+                              background: `${s.color}1A`,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0,
+                            }}
+                          >
+                            <s.Icon size={15} color={s.color} />
+                          </div>
+                          <span>{s.title}</span>
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
 

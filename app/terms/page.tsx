@@ -91,7 +91,7 @@ export default function TermsOfServicePage() {
         <ul>
           <li>Keeping your password confidential and not sharing your account with anyone else.</li>
           <li>All activity that occurs under your account, whether or not you authorized it, except to the extent caused by our negligence.</li>
-          <li>Notifying us immediately at <a href="mailto:hello@lodgely.ng">hello@lodgely.ng</a> if you suspect unauthorized access to your account.</li>
+          <li>Notifying us immediately at <a href="mailto:support@lodgely.ng">support@lodgely.ng</a> if you suspect unauthorized access to your account.</li>
         </ul>
         <p>
           We offer optional two-factor authentication and recommend you enable it, particularly if you hold an
@@ -318,9 +318,9 @@ export default function TermsOfServicePage() {
         <p>
           <strong>Lodgely Inc.</strong>
           <br />
-          Email: <a href="mailto:hello@lodgely.ng">support@lodgely.ng</a>
+          Email: <a href="mailto:support@lodgely.ng">support@lodgely.ng</a>
           <br />
-          [Registered business address — to be added]
+          Plot 246 Cadastral Zone B10, Jabi-Dakibiu, Abuja, Nigeria
         </p>
       </section>
     </LegalLayout>

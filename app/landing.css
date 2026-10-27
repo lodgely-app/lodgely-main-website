@@ -881,11 +881,21 @@
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
 
+/* Flex instead of a fixed 6-column grid: the number of visible cards varies
+   (Realtor/Investment/Owner are feature-flagged, see productFlags.ts), and a
+   rigid repeat(6, 1fr) grid left fewer cards stranded on the left with empty
+   columns on the right instead of centered. */
 .hero-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 14px;
   width: 100%;
+}
+
+.hero-cards-grid .hero-app-card {
+  flex: 1 1 180px;
+  max-width: 220px;
 }
 
 .hero-app-card {
@@ -1225,9 +1235,6 @@
   .hero-main-heading {
     font-size: 34px;
   }
-  .hero-cards-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
   .hero-cards-dock-container {
     margin-top: -60px;
     margin-bottom: 8px;
@@ -1338,43 +1345,11 @@
   .hero-mobile-dots {
     bottom: 65px;
   }
+  /* Hidden on mobile entirely, per product direction — the Operations Suite
+     and Mobile Apps sections just below already cover the same products in
+     a layout that works at this width, so this isn't a loss of content. */
   .hero-cards-dock-container {
-    margin-top: -45px;
-    margin-bottom: 6px;
-    padding: 0 16px;
-  }
-  .hero-cards-dock-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 0 4px;
-  }
-  .hero-dock-tag {
-    font-size: 10px;
-    letter-spacing: 1px;
-  }
-  .hero-dock-caption {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.85);
-  }
-  .hero-cards-grid {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 12px;
-    padding: 4px 4px 14px 4px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .hero-cards-grid::-webkit-scrollbar {
     display: none;
-  }
-  .hero-app-card {
-    min-width: 215px;
-    max-width: 215px;
-    flex: 0 0 215px;
-    scroll-snap-align: start;
   }
   #operations-suite .product-section-wrapper {
     padding-top: 12px !important;
@@ -1393,15 +1368,6 @@
   }
   .hero-description-paragraph {
     font-size: 13px;
-  }
-  .hero-cards-dock-container {
-    margin-top: -38px;
-    padding: 0 12px;
-  }
-  .hero-app-card {
-    min-width: 195px;
-    max-width: 195px;
-    flex: 0 0 195px;
   }
   .hero-dual-cta-button-group {
     height: 42px;
@@ -1461,11 +1427,15 @@
   max-width: 1100px;
 }
 
-/* Sticky Tab Bar */
+/* Sticky Tab Bar — kept below every stacking card (which use z-index
+   10/20/30/40, see ProductSectionCmp.tsx) so the pill never paints on top
+   of whichever card is currently sticky, regardless of how many cards are
+   actually visible (Realtor/Investment/Owner are feature-flagged, so the
+   stack can be as short as 2 cards). */
 .sticky-tabs-container {
   position: sticky;
   top: 96px;
-  z-index: 40;
+  z-index: 5;
   display: flex;
   justify-content: center;
   margin-bottom: 60px;
@@ -1998,6 +1968,20 @@
 .footer-contact-row:hover {
   color: #83E8CA;
 }
+
+/* The address wraps to 2-3 lines at this column width — keep the pin icon
+   pinned to the first line instead of vertically centering against the
+   whole wrapped block. */
+.footer-address-row {
+  align-items: flex-start;
+  cursor: default;
+}
+
+.footer-address-row svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
 
 .footer-col-title-v2 {
   font-size: 14px;
