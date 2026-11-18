@@ -7,11 +7,11 @@ import { SHOW_REALTOR, SHOW_INVESTMENT } from './lib/productFlags';
 export const metadata: Metadata = {
   metadataBase: new URL('https://lodgely.ng'),
   title: {
-    default: 'Lodgely - Premium Facility & Real Estate Management Software',
+    default: 'Lodgely - Smarter Real Estate',
     template: '%s | Lodgely',
   },
   description:
-    'Lodgely is the ultimate unified property and facility management solution. Manage facilities, track service charges, handle maintenance, and securely onboard residents, landlords, and teams across one platform.',
+    'Proptech solutions for your real estate needs. Source it. Build it. Sell it. Buy it. Manage it.',
   keywords: [
     'property management',
     'facility management',
