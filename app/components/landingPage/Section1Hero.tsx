@@ -429,7 +429,7 @@ export const Section1Hero: React.FC = () => {
                       className="hero-app-icon-squircle"
                       style={{
                         backgroundColor: app.lightBg,
-                        border: `1px solid ${app.accentColor}33`,
+                        border: 'none',
                       }}
                     >
                       <img

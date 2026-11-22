@@ -222,8 +222,10 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
   const [productMenu, setProductMenu] = useState(false);
   const [servicesMenu, setServicesMenu] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mobileUserMenuOpen, setMobileUserMenuOpen] = useState(false);
   const [user, setUser] = useState<UserSession | null>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const mobileUserMenuRef = useRef<HTMLDivElement>(null);
   const productMenuRef = useRef<HTMLDivElement>(null);
   const servicesMenuRef = useRef<HTMLDivElement>(null);
 
@@ -272,6 +274,9 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
       const target = e.target as Node;
       if (userMenuRef.current && !userMenuRef.current.contains(target)) {
         setUserMenuOpen(false);
+      }
+      if (mobileUserMenuRef.current && !mobileUserMenuRef.current.contains(target)) {
+        setMobileUserMenuOpen(false);
       }
       if (productMenuRef.current && !productMenuRef.current.contains(target)) {
         setProductMenu(false);
@@ -636,16 +641,106 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
               )}
             </div>
           </Link>
-          <button
-            type="button"
-            onClick={() => setOpenMobile((prev) => !prev)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }}
-            aria-label="Open Menu"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M3 12H21M3 6H21M3 18H21" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" />
-            </svg>
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {user ? (
+              <div style={{ position: 'relative' }} ref={mobileUserMenuRef}>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMobileUserMenuOpen((prev) => !prev);
+                  }}
+                  className="nav-mobile-signin-btn"
+                  style={{
+                    fontFamily: '"Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: '#0F172A',
+                    border: 'none',
+                    padding: '6px 14px',
+                    borderRadius: 100,
+                    background: '#F1F5F9',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    cursor: 'pointer',
+                  }}
+                  aria-label="User Account Menu"
+                >
+                  <User size={15} strokeWidth={2.2} color="#0F172A" />
+                  <span>Hi, {getFirstName(user)}</span>
+                </button>
+
+                <AnimatePresence>
+                  {mobileUserMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.96 }}
+                      transition={{ duration: 0.18 }}
+                      className="nav-user-dropdown"
+                      style={{ position: 'absolute', top: 'calc(100% + 8px)', right: 0, zIndex: 140 }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="nav-user-dropdown-header">
+                        <div className="nav-user-dropdown-name">{user.fullName || 'User'}</div>
+                        {user.email && (
+                          <div className="nav-user-dropdown-email">{user.email}</div>
+                        )}
+                      </div>
+                      <a
+                        href={`${accountUrl}/dashboard`}
+                        className="nav-user-dropdown-item"
+                        onClick={() => setMobileUserMenuOpen(false)}
+                      >
+                        <LayoutDashboard size={16} />
+                        <span>My Dashboard</span>
+                      </a>
+                      <button
+                        onClick={() => {
+                          setMobileUserMenuOpen(false);
+                          handleLogout();
+                        }}
+                        className="nav-user-dropdown-item nav-user-dropdown-logout"
+                      >
+                        <LogOut size={16} />
+                        <span>Sign Out</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <a
+                href={loginUrl}
+                className="nav-mobile-signin-btn"
+                style={{
+                  fontFamily: '"Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: '#0F172A',
+                  textDecoration: 'none',
+                  padding: '7px 16px',
+                  borderRadius: 100,
+                  background: '#F1F5F9',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}
+              >
+                Sign in
+              </a>
+            )}
+            <button
+              type="button"
+              onClick={() => setOpenMobile((prev) => !prev)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              aria-label="Open Menu"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M3 12H21M3 6H21M3 18H21" stroke="#0F172A" strokeWidth="2.5" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Drawer */}

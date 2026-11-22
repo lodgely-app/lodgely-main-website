@@ -39,7 +39,7 @@ export const DeveloperCard = () => (
     description="Plan projects, track unit inventory, manage requisitions and procurement, and release pre-sale units — all tied to one shared identity and one financial trail."
     btnlabel="Explore Developer"
     btnHref="/developer"
-    icon={iconBox(HardHat)}
+    icon={<img src="/logos/lodgely_developer.png" alt="Developer logo" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain' }} />}
     art={
       <ActivityMock
         items={[
@@ -58,7 +58,7 @@ export const FacilityCard = () => (
     description="Coordinate tenancies, maintenance, service charges, and payments across every building in one place — with role-based access for managers, finance, and viewers."
     btnlabel="Explore Facility"
     btnHref="/facility"
-    icon={iconBox(Building2)}
+    icon={<img src="/logos/lodgely_facility.png" alt="Facility logo" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain' }} />}
     art={
       <ActivityMock
         items={[
@@ -77,7 +77,7 @@ export const RealtorCard = () => (
     description="Manage listings, nurture leads through a real pipeline, and close transactions — connected to the same identity your clients already trust."
     btnlabel="Explore Realtor"
     btnHref="/realtor"
-    icon={iconBox(Home)}
+    icon={<img src="/logos/lodgely_realtor.png" alt="Realtor logo" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain' }} />}
     art={
       <ActivityMock
         items={[
@@ -96,7 +96,7 @@ export const InvestmentCard = () => (
     description="Track portfolio returns, monitor cash flows, and evaluate new deals from a live feed of listings and agency channels."
     btnlabel="Explore Investment"
     btnHref="/investment"
-    icon={iconBox(TrendingUp)}
+    icon={<img src="/logos/lodgely_invest.png" alt="Investment logo" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain' }} />}
     art={
       <ActivityMock
         items={[
