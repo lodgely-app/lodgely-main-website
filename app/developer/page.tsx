@@ -1,11 +1,13 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { SiteHeader } from '../components/marketing/SiteHeader';
 import { useIsMobile } from '../lib/useIsMobile';
 import { useScrollReveal } from '../lib/useScrollReveal';
 import { getSignUpUrl, redirectToLogin } from '../lib/auth';
+import { submitLead, HONEYPOT_STYLE } from '../lib/leads';
+import { Recaptcha, RECAPTCHA_SITE_KEY, type RecaptchaHandle } from '../components/marketing/Recaptcha';
 import {
   Menu,
   X,
@@ -284,6 +286,9 @@ export default function DeveloperLandingPage() {
   });
   const [demoSubmitted, setDemoSubmitted] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
+  const [demoError, setDemoError] = useState('');
+  const [demoRecaptcha, setDemoRecaptcha] = useState<string | null>(null);
+  const demoRecaptchaRef = useRef<RecaptchaHandle>(null);
 
   const activeRoleData = ROLE_DETAILS[selectedRole] || ROLE_DETAILS['Site Manager'];
 
@@ -643,7 +648,7 @@ export default function DeveloperLandingPage() {
       </section>
 
       {/* ============================== FEATURE: PROCUREMENT ============================== */}
-      <section className="reveal-on-scroll" style={styles.bandCard}>
+      <section id="procurement" className="reveal-on-scroll" style={styles.bandCard}>
         <div style={isMobile ? { ...styles.featureGrid, gridTemplateColumns: '1fr', gap: 32 } : { ...styles.featureGrid, ...styles.featureGridRev }}>
           <div style={isMobile ? {} : { order: 2 }}>
             <span style={styles.eyebrow}>Requisitions &amp; Procurement</span>
@@ -713,7 +718,7 @@ export default function DeveloperLandingPage() {
       </section>
 
       {/* ============================== FEATURE: INVENTORY ============================== */}
-      <section className="reveal-on-scroll" style={styles.bandLight}>
+      <section id="inventory" className="reveal-on-scroll" style={styles.bandLight}>
         <div style={isMobile ? { ...styles.featureGrid, gridTemplateColumns: '1fr', gap: 32 } : styles.featureGrid}>
           <div>
             <span style={styles.eyebrow}>Inventory &amp; Delivery</span>
@@ -785,7 +790,7 @@ export default function DeveloperLandingPage() {
       </section>
 
       {/* ============================== FEATURE: FINANCE ============================== */}
-      <section className="reveal-on-scroll" style={styles.bandCard}>
+      <section id="finance" className="reveal-on-scroll" style={styles.bandCard}>
         <div style={isMobile ? { ...styles.featureGrid, gridTemplateColumns: '1fr', gap: 32 } : { ...styles.featureGrid, ...styles.featureGridRev }}>
           <div style={isMobile ? {} : { order: 2 }}>
             <span style={styles.eyebrow}>Finance &amp; Payments</span>
@@ -843,7 +848,7 @@ export default function DeveloperLandingPage() {
       </section>
 
       {/* ============================== HOW IT WORKS ============================== */}
-      <section className="reveal-on-scroll" style={styles.bandCard}>
+      <section id="how-it-works" className="reveal-on-scroll" style={styles.bandCard}>
         <div style={{ maxWidth: 1180, margin: '0 auto' }}>
           <span style={styles.eyebrow}>— HOW IT WORKS</span>
           <h2 style={styles.h2}>Five steps. One record, start to finish.</h2>
@@ -1154,13 +1159,35 @@ export default function DeveloperLandingPage() {
                   </div>
                 ) : (
                   <form
-                    onSubmit={(e) => {
+                    onSubmit={async (e) => {
                       e.preventDefault();
+                      setDemoError('');
+                      if (RECAPTCHA_SITE_KEY && !demoRecaptcha) {
+                        setDemoError('Please tick “I’m not a robot” before sending.');
+                        return;
+                      }
+                      const honeypot = (new FormData(e.currentTarget).get('website') as string) || '';
                       setDemoLoading(true);
-                      setTimeout(() => {
-                        setDemoLoading(false);
+                      try {
+                        await submitLead({
+                          kind: 'demo',
+                          interest: 'Lodgely Developer',
+                          name: demoForm.fullName,
+                          email: demoForm.workEmail,
+                          phone: demoForm.phone,
+                          company: demoForm.companyName,
+                          size: demoForm.scale,
+                          message: demoForm.notes,
+                          recaptchaToken: demoRecaptcha || undefined,
+                          website: honeypot,
+                        });
                         setDemoSubmitted(true);
-                      }, 600);
+                      } catch (err) {
+                        setDemoError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+                        demoRecaptchaRef.current?.reset();
+                      } finally {
+                        setDemoLoading(false);
+                      }
                     }}
                     style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
                   >
@@ -1329,6 +1356,32 @@ export default function DeveloperLandingPage() {
                       />
                     </div>
 
+                    {/* Honeypot — hidden from people, bots fill it in */}
+                    <div aria-hidden="true" style={HONEYPOT_STYLE}>
+                      <label>
+                        Website
+                        <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+                      </label>
+                    </div>
+
+                    <Recaptcha ref={demoRecaptchaRef} onChange={setDemoRecaptcha} />
+
+                    {demoError && (
+                      <div
+                        role="alert"
+                        style={{
+                          padding: '11px 14px',
+                          borderRadius: 8,
+                          background: '#fef2f2',
+                          border: '1px solid #fecaca',
+                          color: '#b91c1c',
+                          fontSize: 13.5,
+                        }}
+                      >
+                        {demoError}
+                      </div>
+                    )}
+
                     <button
                       type="submit"
                       disabled={demoLoading}
@@ -1395,6 +1448,7 @@ export default function DeveloperLandingPage() {
           <div>
             <h5 style={styles.footH5}>Resources</h5>
             <ul style={styles.footList}>
+              <li><a href="/developer/pricing">Pricing</a></li>
               <li><a href="#faq">FAQ</a></li>
               <li><a href="#roles">Roles &amp; Permissions</a></li>
             </ul>

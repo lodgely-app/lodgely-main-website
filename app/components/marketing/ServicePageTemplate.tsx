@@ -102,7 +102,7 @@ export function ServicePageTemplate({
 
         <div style={{ marginTop: 34 }}>
           <a
-            href="/schedule-demo"
+            href={`/schedule-demo?topic=${eyebrow.replace(/^Lodgely /, '').toLowerCase().replace(/\s+/g, '-')}`}
             style={{
               display: 'inline-flex',
               alignItems: 'center',

@@ -35,7 +35,7 @@ export function ComingSoonTemplate({
   primaryCtaLabel = 'Schedule a demo',
 }: ComingSoonTemplateProps) {
   const signInUrl = getSignInUrl(appId);
-  const signUpUrl = '/schedule-demo';
+  const signUpUrl = `/schedule-demo?topic=${appId}`;
 
   return (
     <main>
@@ -155,7 +155,7 @@ export function ComingSoonTemplate({
         </div>
       </section>
 
-      <section style={{ padding: '0 48px 100px' }}>
+      <section id="features" style={{ padding: '0 48px 100px' }}>
         <div
           style={{
             maxWidth: 1180,

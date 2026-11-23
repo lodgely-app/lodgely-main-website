@@ -2255,3 +2255,115 @@
   transition: transform 0.2s ease;
 }
 
+
+/* --- Navbar brand (see NavBrand in Navbar.tsx) --- */
+/* Links sit next to the brand, actions on the right (Atlassian-style). */
+.navbar-pill { justify-content: flex-start; }
+.navbar-pill .navbar-links-group { margin-left: 44px; }
+.navbar-pill .nav-actions-group { margin-left: auto; }
+
+/* On app pages the Lodgely tile is flush with the bar's left edge. */
+.navbar-pill.has-app,
+.navbar-mobile-bar.has-app { padding-left: 0; }
+
+.nav-home-tile {
+  align-self: stretch;
+  flex-shrink: 0;
+  width: 76px;
+  margin: -1px 0 -1px -1px; /* cover the bar's own border */
+  padding-left: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2C3552;
+  border-radius: 9999px 0 0 9999px;
+  transition: background 0.2s ease;
+}
+.nav-home-tile img { display: block; object-fit: contain; transition: transform 0.2s ease; }
+.nav-home-tile:hover { background: #1B2138; }
+.nav-home-tile:hover img { transform: scale(1.08); }
+.nav-home-tile:focus-visible { outline: 2px solid #83E8CA; outline-offset: -4px; }
+
+.nav-app-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 28px;
+  text-decoration: none;
+  white-space: nowrap;
+  line-height: 1;
+  transition: opacity 0.2s ease;
+}
+.nav-app-brand:hover { opacity: 0.8; }
+.nav-app-brand img { width: 30px; height: 30px; object-fit: contain; border-radius: 8px; flex-shrink: 0; }
+.nav-app-brand-parent {
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #475569;
+}
+.nav-app-brand-name { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+
+.navbar-mobile-bar .nav-home-tile { width: 60px; padding-left: 4px; }
+.navbar-mobile-bar .nav-app-brand { margin-left: 18px; margin-right: auto; gap: 8px; }
+.navbar-mobile-bar .nav-app-brand img { width: 26px; height: 26px; border-radius: 7px; }
+.navbar-mobile-bar .nav-app-brand-name { font-size: 17px; }
+
+/* --- Full-width navbar (Atlassian-style) ---
+   Overrides the floating-pill rules above: one white bar across the top of
+   the page, the Lodgely tile flush with the left edge on app pages. */
+.navbar-wrapper,
+.navbar-wrapper.is-scrolled {
+  position: fixed;
+  top: 0;
+  padding: 0;
+}
+
+.navbar-pill {
+  max-width: none;
+  height: 72px;
+  padding: 0 32px 0 40px;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #E2E8F0;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: none;
+  transition: box-shadow 0.2s ease;
+}
+.navbar-wrapper.is-scrolled .navbar-pill,
+.navbar-wrapper.is-scrolled .navbar-mobile-bar {
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+.navbar-pill .navbar-links-group { margin-left: 48px; gap: 32px; }
+.navbar-pill.has-app { padding-left: 0; }
+
+.nav-home-tile {
+  width: 72px;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+}
+.nav-app-brand { margin-left: 64px; }
+
+.navbar-mobile-bar {
+  height: 64px;
+  padding: 0 16px;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #E2E8F0;
+  box-shadow: none;
+}
+.navbar-mobile-bar.has-app { padding-left: 0; }
+.navbar-mobile-bar .nav-home-tile { width: 56px; padding: 0; }
+.navbar-mobile-bar .nav-app-brand { margin-left: 20px; }
+
+.mobile-drawer { border-radius: 0 0 20px 20px; border-top: none; }
+
+@media (max-width: 1200px) {
+  .navbar-pill { padding-right: 24px; }
+  .navbar-pill .navbar-links-group { margin-left: 32px; gap: 24px; }
+  .nav-app-brand { margin-left: 44px; }
+}
+
+/* Anchor targets land below the fixed navbar instead of under it. */
+section[id] { scroll-margin-top: 96px; }

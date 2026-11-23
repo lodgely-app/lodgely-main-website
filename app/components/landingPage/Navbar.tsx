@@ -22,6 +22,7 @@ import {
 import { getSignInUrl, getAccountAppUrl } from '../../lib/auth';
 import { isProductVisible } from '../../lib/productFlags';
 import { withCsrfHeader } from '../../lib/csrf';
+import { APP_NAV, AppNavLinks, flattenAppNav } from './appNav';
 
 const ProductsList = [
   {
@@ -215,6 +216,40 @@ const getFirstName = (u: UserSession | null): string => {
   return 'User';
 };
 
+// Two-part brand, modelled on Atlassian's product sites: on an app page a
+// navy Lodgely tile on the far left goes to the main landing page, and the
+// app logo + name next to it go to that app's home. Elsewhere it's just the
+// Lodgely logo. Styles: landing.css → "Navbar brand".
+function NavBrand({ currentApp, size }: { currentApp?: AppInfo; size: 'desktop' | 'mobile' }) {
+  const d = size === 'desktop';
+  const icon = d ? 36 : 28;
+  const text = d ? 19 : 17;
+  const word = { fontWeight: 800, fontSize: text, letterSpacing: '-0.02em', color: '#0F172A' } as const;
+
+  if (!currentApp) {
+    return (
+      <Link href="/" className="navbar-brand-link" style={{ display: 'flex', alignItems: 'center', gap: d ? 12 : 10, textDecoration: 'none' }}>
+        <img src="/logos/lodgely_main.png" alt="Lodgely" width={icon} height={icon} style={{ width: icon, height: icon, objectFit: 'contain', borderRadius: d ? 10 : 8, flexShrink: 0 }} />
+        <span style={word}>Lodgely</span>
+      </Link>
+    );
+  }
+
+  return (
+    <>
+      <Link href="/" className="nav-home-tile" title="Lodgely home" aria-label="Lodgely home">
+        <img src="/logos/lodgely_mark.png" alt="" width={d ? 28 : 24} height={d ? 28 : 24} />
+      </Link>
+      <Link href={`/${currentApp.id}`} className="nav-app-brand" title={`Lodgely ${currentApp.name} home`}>
+        <img src={currentApp.logo} alt="" width={d ? 30 : 26} height={d ? 30 : 26} />
+        {/* On phones the Lodgely tile already sits alongside, so just the app name. */}
+        {d && <span className="nav-app-brand-parent">Lodgely</span>}
+        <span className="nav-app-brand-name" style={{ color: currentApp.color }}>{currentApp.name}</span>
+      </Link>
+    </>
+  );
+}
+
 export const Navbar = ({ activeAppId }: NavbarProps) => {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -242,6 +277,20 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
   })();
 
   const currentApp = currentAppId ? APPS_CONFIG[currentAppId] : undefined;
+  // Opens the contact panel for the product/service the visitor is looking at.
+  // Resident and Owner are consumer mobile apps — their navbar CTA sends
+  // people to the download section instead of a sales demo.
+  const isConsumerApp = currentAppId === 'resident' || currentAppId === 'owner';
+  const demoHref = isConsumerApp
+    ? `/${currentAppId}#download`
+    : currentAppId
+      ? `/schedule-demo?topic=${currentAppId}`
+      : '/schedule-demo';
+  const demoLabel = isConsumerApp ? 'Get the app' : 'Get demo';
+  // Only the apps with a public pricing model get a Pricing link.
+  const pricingHref = currentAppId === 'developer' || currentAppId === 'facility' ? `/${currentAppId}/pricing` : undefined;
+  // App pages get their own links (appNav.tsx); the main site keeps the shared ones.
+  const appLinks = currentAppId ? APP_NAV[currentAppId] : undefined;
   const loginUrl = getSignInUrl(currentAppId);
   const accountUrl = getAccountAppUrl();
 
@@ -340,62 +389,19 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
         initial={{ y: -120, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: 'spring', duration: 1.2, stiffness: 130, damping: 20 }}
-        style={{ width: '100%', maxWidth: '1304px', position: 'relative' }}
+        style={{ width: '100%', position: 'relative' }}
       >
         {/* Desktop Navbar */}
-        <div className="navbar-pill">
-          {/* Logo & App Name Brand */}
-          <Link
-            href="/"
-            className="navbar-brand-link"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              textDecoration: 'none',
-            }}
-          >
-            <img
-              src={currentApp?.logo || '/logos/lodgely_main.png'}
-              alt={currentApp ? `Lodgely ${currentApp.name}` : 'Lodgely'}
-              width={36}
-              height={36}
-              style={{
-                width: 36,
-                height: 36,
-                objectFit: 'contain',
-                borderRadius: 10,
-                flexShrink: 0,
-              }}
-            />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, lineHeight: 1 }}>
-              <span
-                style={{
-                  fontWeight: 800,
-                  fontSize: 19,
-                  letterSpacing: '-0.02em',
-                  color: '#0F172A',
-                }}
-              >
-                Lodgely
-              </span>
-              {currentApp && (
-                <span
-                  style={{
-                    fontWeight: 800,
-                    fontSize: 19,
-                    letterSpacing: '-0.02em',
-                    color: currentApp.color,
-                  }}
-                >
-                  {currentApp.name}
-                </span>
-              )}
-            </div>
-          </Link>
+        <div className={`navbar-pill${currentApp ? ' has-app' : ''}`}>
+          {/* Logo & App Name Brand: main Lodgely mark → main site, app logo → app home */}
+          <NavBrand currentApp={currentApp} size="desktop" />
 
           {/* Nav Links */}
           <div className="navbar-links-group">
+            {appLinks && currentApp ? (
+              <AppNavLinks links={appLinks} color={currentApp.color} pathname={pathname} />
+            ) : (
+              <>
             {/* Products Dropdown */}
             <div style={{ position: 'relative' }} ref={productMenuRef}>
               <button
@@ -546,12 +552,19 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
               </AnimatePresence>
             </div>
 
+            {pricingHref && (
+              <Link href={pricingHref} className="nav-item-btn" style={pathname === pricingHref ? { color: currentApp?.color } : undefined}>
+                Pricing
+              </Link>
+            )}
             <Link href="/privacy" className="nav-item-btn">
               Privacy
             </Link>
             <Link href="/terms" className="nav-item-btn">
               Terms
             </Link>
+              </>
+            )}
           </div>
 
           {/* Action buttons */}
@@ -612,8 +625,8 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                 <a href={loginUrl} className="nav-signin-link">
                   Sign in
                 </a>
-                <Link href="/schedule-demo" className="nav-get-demo-btn">
-                  Get demo
+                <Link href={demoHref} className="nav-get-demo-btn">
+                  {demoLabel}
                 </Link>
               </>
             )}
@@ -621,26 +634,8 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
         </div>
 
         {/* Mobile Header Bar */}
-        <div className="navbar-mobile-bar">
-          <Link
-            href="/"
-            className="navbar-brand-link"
-            style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
-          >
-            <img
-              src={currentApp?.logo || '/logos/lodgely_main.png'}
-              alt="Lodgely"
-              style={{ height: 28, width: 28, objectFit: 'contain', borderRadius: 8 }}
-            />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-              <span style={{ fontWeight: 800, fontSize: 17, color: '#0F172A' }}>Lodgely</span>
-              {currentApp && (
-                <span style={{ fontWeight: 800, fontSize: 17, color: currentApp.color }}>
-                  {currentApp.name}
-                </span>
-              )}
-            </div>
-          </Link>
+        <div className={`navbar-mobile-bar${currentApp ? ' has-app' : ''}`}>
+          <NavBrand currentApp={currentApp} size="mobile" />
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {user ? (
               <div style={{ position: 'relative' }} ref={mobileUserMenuRef}>
@@ -779,12 +774,38 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                {appLinks && currentApp && (
+                  <div>
+                    <div style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '12px' }}>
+                      Explore
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', paddingLeft: '4px' }}>
+                      {flattenAppNav(appLinks).map((l) => (
+                        <Link
+                          key={l.href}
+                          href={l.href}
+                          onClick={() => setOpenMobile(false)}
+                          style={{
+                            padding: '8px 0',
+                            textDecoration: 'none',
+                            color: pathname === l.href ? currentApp.color : '#334155',
+                            fontSize: '16px',
+                            fontWeight: pathname === l.href ? 700 : 500,
+                          }}
+                        >
+                          {l.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <div style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '12px' }}>
-                    Products
+                    {appLinks ? 'Other products' : 'Products'}
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '4px' }}>
-                    {VisibleProductsList.map((p) => (
+                    {VisibleProductsList.filter((p) => !appLinks || p.id !== currentAppId).map((p) => (
                       <Link
                         key={p.id}
                         href={p.link}
@@ -811,6 +832,7 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                   </div>
                 </div>
 
+                {!appLinks && (
                 <div>
                   <div style={{ fontSize: '20px', fontWeight: 700, color: '#0F172A', marginBottom: '12px' }}>
                     Services
@@ -854,8 +876,14 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                     })}
                   </div>
                 </div>
+                )}
 
                 <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  {pricingHref && !appLinks && (
+                    <Link href={pricingHref} onClick={() => setOpenMobile(false)} style={{ textDecoration: 'none', color: '#0F172A', fontSize: '18px', fontWeight: 600 }}>
+                      Pricing
+                    </Link>
+                  )}
                   <Link href="/privacy" onClick={() => setOpenMobile(false)} style={{ textDecoration: 'none', color: '#0F172A', fontSize: '18px', fontWeight: 600 }}>
                     Privacy
                   </Link>
@@ -926,7 +954,7 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                         Sign in
                       </a>
                       <Link
-                        href="/schedule-demo"
+                        href={demoHref}
                         onClick={() => setOpenMobile(false)}
                         className="nav-get-demo-btn"
                         style={{
@@ -935,7 +963,7 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                           fontSize: 16,
                         }}
                       >
-                        Get demo
+                        {demoLabel}
                       </Link>
                     </>
                   )}
