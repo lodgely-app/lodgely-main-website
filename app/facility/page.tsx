@@ -78,7 +78,7 @@ export default function FacilityLandingPage() {
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mb-12">
-              <Link href="/schedule-demo">
+              <Link href="/schedule-demo?topic=facility">
                 <Button className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white px-6 py-5 text-[11px] font-bold uppercase tracking-widest rounded-none shadow-none active:scale-95 transition-all">
                   Schedule a demo <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
@@ -522,7 +522,7 @@ export default function FacilityLandingPage() {
             Join forward-thinking facility managers who've replaced scattered tools with one premium platform.
           </p>
           <div className="flex justify-center">
-            <Link href="/schedule-demo">
+            <Link href="/schedule-demo?topic=facility">
               <Button className="bg-white hover:bg-slate-100 text-slate-900 px-8 py-5 text-xs font-bold uppercase tracking-widest rounded-none shadow-lg active:scale-95 transition-all">
                 Schedule a Demo <ArrowRight className="ml-2 w-4 h-4" />
               </Button>

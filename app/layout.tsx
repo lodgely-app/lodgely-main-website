@@ -3,6 +3,7 @@ import './landing.css';
 import React from 'react';
 import type { Metadata } from 'next';
 import { SHOW_REALTOR, SHOW_INVESTMENT } from './lib/productFlags';
+import { LeadDrawerProvider } from './components/marketing/LeadDrawer';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://lodgely.ng'),
@@ -115,7 +116,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <LeadDrawerProvider>{children}</LeadDrawerProvider>
+      </body>
     </html>
   );
 }

@@ -42,6 +42,7 @@ export function AppStoreTemplate({
 
       {/* ---------- HERO ---------- */}
       <section
+        id="download"
         style={{
           textAlign: 'center',
           padding: '136px 24px 56px',
@@ -163,7 +164,7 @@ export function AppStoreTemplate({
       </section>
 
       {/* ---------- FEATURE HIGHLIGHTS ---------- */}
-      <section style={{ padding: '20px 24px 100px' }}>
+      <section id="features" style={{ padding: '20px 24px 100px' }}>
         <div
           style={{
             maxWidth: 1120,
