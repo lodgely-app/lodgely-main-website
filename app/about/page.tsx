@@ -4,7 +4,7 @@ import AboutClient from './AboutClient';
 export const metadata = {
   title: 'About Us',
   description:
-    'Lodgely is property software built in Nigeria — one connected platform for the people who build, manage, live in and own property.',
+    'Lodgely combines technology with professional facility management to create transparent, efficient and well-managed communities across Africa.',
 };
 
 export default function AboutPage() {

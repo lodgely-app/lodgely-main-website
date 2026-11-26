@@ -117,8 +117,8 @@ export function AboutHero({ stages }: { stages: HeroStage[] }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.7, ease: EASE }}
           >
-            Lodgely connects the people who build, manage, live in and own property, on one platform built in
-            Nigeria, for the way property works here.
+            Lodgely combines technology with professional facility management, so residents, facility teams,
+            vendors and property owners work from one system while our team delivers on the ground.
           </motion.p>
 
           <motion.div

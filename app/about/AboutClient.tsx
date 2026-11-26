@@ -4,16 +4,26 @@ import React from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
+  Award,
   Briefcase,
+  CheckCircle2,
   ClipboardList,
+  Compass,
+  Cpu,
+  Gauge,
   GraduationCap,
-  Layers,
+  HeartHandshake,
+  Home,
+  Lightbulb,
   Mail,
   MapPin,
-  ReceiptText,
+  Phone,
   ShieldCheck,
+  Target,
+  Users,
   Wallet,
   Workflow,
+  Wrench,
 } from 'lucide-react';
 import { SiteHeader } from '../components/marketing/SiteHeader';
 import FooterCmp from '../components/landingPage/FooterCmp';
@@ -76,26 +86,46 @@ const STAGES = [
   },
 ].filter((s) => isProductVisible(s.id));
 
-const PRINCIPLES = [
+// What every facility Lodgely manages should be.
+const QUALITIES = [
+  { Icon: ShieldCheck, label: 'Safe' },
+  { Icon: Gauge, label: 'Efficient' },
+  { Icon: Wrench, label: 'Well-maintained' },
+  { Icon: Wallet, label: 'Financially transparent' },
+  { Icon: Cpu, label: 'Technology-enabled' },
+  { Icon: Home, label: 'Resident-focused' },
+];
+
+const VALUES = [
   {
-    Icon: Layers,
-    title: 'One shared record',
-    text: 'The developer, the manager, the resident and the owner look at the same numbers, not their own copies in separate spreadsheets.',
+    Icon: HeartHandshake,
+    title: 'We put customers first',
+    text: 'Every decision starts with what residents, property owners, developers and colleagues need. We communicate clearly, act respectfully and aim for excellent service.',
   },
   {
-    Icon: Wallet,
-    title: 'Money you can follow',
-    text: 'Every charge, payment and payout is recorded against the unit it belongs to, so a balance can always be explained.',
+    Icon: CheckCircle2,
+    title: 'We take ownership',
+    text: 'We don’t wait for someone else to solve a problem. We take responsibility for it and follow through until it is closed.',
   },
   {
     Icon: ShieldCheck,
-    title: 'The right access for each role',
-    text: 'Teams decide who can view, approve or pay. People see what their role needs and nothing more.',
+    title: 'We operate with integrity',
+    text: 'We are honest in how we communicate, transparent in how we report and accountable for what we do, even when no one is watching.',
   },
   {
-    Icon: ReceiptText,
-    title: 'Built for how property works here',
-    text: 'Naira pricing, service charge and rent cycles, and online payments or bank transfers, designed around the Nigerian market from the start.',
+    Icon: Award,
+    title: 'We pursue excellence',
+    text: 'Good enough is rarely good enough. We keep improving our technology, operations and service, one consistent step at a time.',
+  },
+  {
+    Icon: Users,
+    title: 'We work as one team',
+    text: 'Technology supports operations, operations inform product, and finance supports everyone. No team succeeds in isolation.',
+  },
+  {
+    Icon: Lightbulb,
+    title: 'We embrace innovation',
+    text: 'Innovation isn’t limited to software. It means better processes, less waste, clearer communication and better ways to serve you.',
   },
 ];
 
@@ -132,30 +162,101 @@ export default function AboutClient() {
         <Reveal>
         <div className="about-story">
           <div>
-            <p className="about-kicker">Why we exist</p>
-            <h2>Property runs on too many disconnected tools.</h2>
+            <p className="about-kicker">Our story</p>
+            <h2>Managing properties and facilities should not be chaotic.</h2>
           </div>
           <div className="about-story-body">
             <p>
-              A single building can pass through a developer, an agent, a facility manager, its residents and its
-              owners. Each of them usually keeps their own records, in spreadsheets, notebooks, chat groups and
-              bank alerts, and none of those records agree.
+              Across many residential estates, commercial properties and managed communities, facility management
+              has been reactive rather than proactive. Residents struggle with unresolved maintenance issues, little
+              visibility into service charges and poor communication. Facility managers rely on manual processes,
+              scattered records and disconnected tools.
             </p>
             <p>
-              We built Lodgely so that everyone involved works from the same information. A project&rsquo;s costs,
-              a unit&rsquo;s service charge, a resident&rsquo;s payment and an owner&rsquo;s payout all live in one
-              place, and each person sees the part that matters to them.
+              Lodgely was founded to change that. We combine technology with professional facility management to
+              create transparent, efficient and well-run communities. Our platform lets residents, facility teams,
+              vendors and property owners work together in one system, while our operations team delivers
+              facility management on the ground.
             </p>
           </div>
         </div>
         </Reveal>
       </section>
 
+      {/* Mission & vision */}
+      <section className="about-section about-section-tint">
+        <div className="about-mv">
+          <Reveal>
+            <div className="about-mv-card">
+              <span className="about-icon">
+                <Target size={22} strokeWidth={1.75} />
+              </span>
+              <p className="about-kicker">Our mission</p>
+              <p className="about-mv-text">
+                To simplify facility and property management through innovative technology, operational excellence
+                and exceptional customer service.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div className="about-mv-card about-mv-card-dark">
+              <span className="about-icon">
+                <Compass size={22} strokeWidth={1.75} />
+              </span>
+              <p className="about-kicker">Our vision</p>
+              <p className="about-mv-text">
+                To become Africa&rsquo;s leading technology-enabled facility and property management company,
+                empowering communities, property owners and facility teams with world-class digital solutions and
+                operational excellence.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Why we exist */}
+      <section className="about-section">
+        <div className="about-why">
+          <Reveal>
+            <div>
+              <p className="about-kicker">Why we exist</p>
+              <h2>Buildings are more than physical structures.</h2>
+              <p className="about-muted">
+                They are where people live, work, build businesses, raise families and create communities. Poor
+                facility management affects safety, trust, financial accountability and quality of life. Lodgely
+                exists to make sure every facility we manage is:
+              </p>
+            </div>
+          </Reveal>
+          <ul className="about-qualities">
+            {QUALITIES.map(({ Icon, label }, n) => (
+              <motion.li
+                key={label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: n * 0.06 }}
+              >
+                <span className="about-icon">
+                  <Icon size={20} strokeWidth={1.75} />
+                </span>
+                {label}
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* Lifecycle */}
       <section className="about-section about-section-tint" id="products">
         <div className="about-head">
           <p className="about-kicker">What we make</p>
-          <h2>One platform, from first brick to everyday living.</h2>
+          <h2>One brand for every stage of the property lifecycle.</h2>
+          <p className="about-muted">
+            Facility management, estate management, development management and property investment. Each product
+            works on its own or together with the others, for developers, property owners, residents, investors and
+            facility teams.
+          </p>
         </div>
         <ol className="about-stages">
           {STAGES.map((s, i) => (
@@ -182,21 +283,38 @@ export default function AboutClient() {
         </ol>
       </section>
 
-      {/* Principles */}
+      {/* What makes us different */}
       <section className="about-section">
+        <Reveal>
+          <div className="about-diff">
+            <p className="about-kicker">What makes Lodgely different</p>
+            <p className="about-diff-line">We are not just a software company.</p>
+            <p className="about-diff-line">We are not just a real estate company.</p>
+            <p className="about-diff-line about-diff-accent">We are both.</p>
+            <p className="about-muted about-diff-body">
+              Our technology is shaped by real operational challenges, and our operations are strengthened by
+              purpose-built technology. That combination lets us deliver better outcomes for our clients and their
+              residents.
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Core values */}
+      <section className="about-section about-section-tint">
         <div className="about-head">
-          <p className="about-kicker">What we believe</p>
-          <h2>How we build Lodgely.</h2>
+          <p className="about-kicker">Our core values</p>
+          <h2>What guides how we work.</h2>
         </div>
         <div className="about-principles">
-          {PRINCIPLES.map(({ Icon, title, text }, n) => (
+          {VALUES.map(({ Icon, title, text }, n) => (
             <motion.div
               key={title}
               className="about-principle"
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: n * 0.08 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: (n % 3) * 0.08 }}
             >
               <span className="about-icon">
                 <Icon size={22} strokeWidth={1.75} />
@@ -209,15 +327,15 @@ export default function AboutClient() {
       </section>
 
       {/* Services */}
-      <section className="about-section about-section-tint">
+      <section className="about-section">
         <Reveal>
         <div className="about-services">
           <div>
             <p className="about-kicker">More than software</p>
             <h2>We work alongside your team.</h2>
             <p className="about-muted">
-              Software only helps when people use it well. Our team also offers hands-on services to help you plan,
-              roll out and run your properties.
+              Our ambition goes beyond software. We bring technology, people and processes together, and our team
+              offers hands-on services to help you plan, roll out and run your properties.
             </p>
           </div>
           <ul className="about-service-list">
@@ -247,6 +365,9 @@ export default function AboutClient() {
             <div className="about-contact">
               <a href="mailto:support@lodgely.ng">
                 <Mail size={16} /> support@lodgely.ng
+              </a>
+              <a href="tel:+2349115761018">
+                <Phone size={16} /> +234 (0)911 576 1018
               </a>
               <span>
                 <MapPin size={16} /> Plot 246 Cadastral Zone B10, Jabi-Dakibiu, Abuja, Nigeria
