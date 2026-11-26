@@ -35,8 +35,9 @@ const YoutubeIcon = () => (
 
 const quickLinks = [
   { label: 'Home', href: '/' },
-  { label: 'Operations Suite', href: '#operations-suite' },
-  { label: 'Mobile Apps', href: '#mobile-apps' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Operations Suite', href: '/#operations-suite' },
+  { label: 'Mobile Apps', href: '/#mobile-apps' },
 ];
 
 const operatorApps = [

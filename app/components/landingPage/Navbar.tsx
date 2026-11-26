@@ -557,6 +557,9 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                 Pricing
               </Link>
             )}
+            <Link href="/about" className="nav-item-btn" style={pathname === '/about' ? { color: 'var(--navy)', fontWeight: 700 } : undefined}>
+              About
+            </Link>
             <Link href="/privacy" className="nav-item-btn">
               Privacy
             </Link>
@@ -884,6 +887,9 @@ export const Navbar = ({ activeAppId }: NavbarProps) => {
                       Pricing
                     </Link>
                   )}
+                  <Link href="/about" onClick={() => setOpenMobile(false)} style={{ textDecoration: 'none', color: '#0F172A', fontSize: '18px', fontWeight: 600 }}>
+                    About Us
+                  </Link>
                   <Link href="/privacy" onClick={() => setOpenMobile(false)} style={{ textDecoration: 'none', color: '#0F172A', fontSize: '18px', fontWeight: 600 }}>
                     Privacy
                   </Link>
